@@ -1,0 +1,43 @@
+# DermaCare - Strict Lint Configuration
+# Enforces Flutter and Dart best practices
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+  errors:
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    # Code Style
+    - always_declare_return_types
+    - avoid_print
+    - avoid_unnecessary_containers
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_fields
+    - prefer_final_locals
+    - prefer_single_quotes
+    - unnecessary_null_checks
+    - use_key_in_widget_constructors
+    
+    # Error Prevention
+    - cancel_subscriptions
+    - close_sinks
+    - avoid_slow_async_io
+    
+    # Best Practices
+    - avoid_relative_lib_imports
+    - prefer_relative_imports
+
