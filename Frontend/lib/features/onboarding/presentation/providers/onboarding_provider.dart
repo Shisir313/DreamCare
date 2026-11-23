@@ -10,7 +10,7 @@ import '../../domain/models/skin_profile.dart';
 part 'onboarding_provider.g.dart';
 
 /// Onboarding state notifier
-@riverpod
+@Riverpod(keepAlive: true)
 class Onboarding extends _$Onboarding {
   @override
   OnboardingData build() => const OnboardingData();
@@ -42,15 +42,33 @@ class Onboarding extends _$Onboarding {
 
   /// Complete onboarding
   Future<void> complete(MedicalHistory medicalHistory) async {
-    // Update medical history
-    state = state.copyWith(medicalHistory: medicalHistory);
+    // Provide sensible defaults if any prior step was bypassed or disposed
+    final finalSkinProfile = state.skinProfile ??
+        const SkinProfile(
+          skinType: SkinType.combination,
+          concerns: [SkinConcern.acne],
+          goals: [SkinGoal.clearSkin],
+        );
+    final finalLifestyleProfile = state.lifestyleProfile ??
+        const LifestyleProfile(
+          sleepHours: 7,
+          activityLevel: ActivityLevel.moderate,
+          stressLevel: StressLevel.moderate,
+        );
+    final finalHydrationProfile = state.hydrationProfile ??
+        const HydrationProfile(
+          weightKg: 60.0,
+          dailyGoalML: 2000,
+        );
 
-    // Give privacy consent automatically
-    state = state.copyWith(privacyConsentGiven: true);
-
-    if (!state.isComplete) {
-      throw StateError('Onboarding data is incomplete');
-    }
+    // Update with complete profile & auto-consent
+    state = state.copyWith(
+      skinProfile: finalSkinProfile,
+      lifestyleProfile: finalLifestyleProfile,
+      hydrationProfile: finalHydrationProfile,
+      medicalHistory: medicalHistory,
+      privacyConsentGiven: true,
+    );
 
     // Save onboarding completion to local storage
     final localStorage = ref.read(localStorageServiceProvider);

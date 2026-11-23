@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../../features/auth/presentation/screens/reset_password_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/membership/presentation/screens/membership_plans_screen.dart';
 import '../../features/membership/presentation/screens/payment_screen.dart';
@@ -14,6 +16,8 @@ import '../../features/doctors/presentation/screens/doctors_list_screen.dart';
 import '../../features/doctors/presentation/screens/doctor_profile_screen.dart';
 import '../../features/doctors/presentation/screens/appointment_booking_screen.dart';
 import '../../features/doctors/presentation/screens/appointment_confirmation_screen.dart';
+import '../../features/doctors/presentation/screens/appointments_list_screen.dart';
+import '../../features/doctors/presentation/screens/appointment_detail_screen.dart';
 import '../../features/doctors/domain/models/appointment.dart';
 import '../../features/onboarding/presentation/screens/welcome_screen.dart';
 import '../../features/onboarding/presentation/screens/skin_profile_screen.dart';
@@ -31,6 +35,8 @@ import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/profile/presentation/screens/help_center_screen.dart';
 import '../../features/profile/presentation/screens/about_screen.dart';
 import '../../features/assistant/presentation/screens/voice_chat_screen.dart';
+import '../../features/routine/presentation/screens/routine_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import 'route_names.dart';
 import 'page_transitions.dart';
 
@@ -75,13 +81,33 @@ class AppRouter {
       name: 'register',
       builder: (context, state) => const RegisterScreen(),
     ),
-    // TODO: Add forgotPassword, resetPassword routes
+    GoRoute(
+      path: RouteNames.forgotPassword,
+      name: 'forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: RouteNames.resetPassword,
+      name: 'reset-password',
+      builder: (context, state) =>
+          ResetPasswordScreen(phone: state.extra as String?),
+    ),
 
     // Home (with bottom navigation)
     GoRoute(
       path: RouteNames.home,
       name: 'home',
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/notifications',
+      name: 'notifications',
+      builder: (context, state) => const NotificationsScreen(),
+    ),
+    GoRoute(
+      path: '/routine',
+      name: 'routine',
+      builder: (context, state) => const RoutineScreen(),
     ),
 
     // Membership
@@ -145,6 +171,19 @@ class AppRouter {
         }
         return AppointmentConfirmationScreen(appointment: appointment);
       },
+    ),
+    GoRoute(
+      path: '/appointments',
+      name: 'appointments',
+      builder: (context, state) => const AppointmentsListScreen(),
+    ),
+    GoRoute(
+      path: '/appointments/:appointmentId',
+      name: 'appointment-detail',
+      builder: (context, state) => AppointmentDetailScreen(
+        appointmentId: state.pathParameters['appointmentId']!,
+        appointment: state.extra as Appointment?,
+      ),
     ),
 
     // Onboarding

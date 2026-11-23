@@ -91,11 +91,7 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.event,
                     title: 'Appointments',
                     subtitle: 'Upcoming & past appointments',
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Appointments list coming soon')),
-                      );
-                    },
+                    onTap: () => context.push('/appointments'),
                   ),
                   const SizedBox(height: AppSpacing.md),
 

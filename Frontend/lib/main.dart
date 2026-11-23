@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'core/theme/app_theme.dart';
 import 'core/routing/app_router.dart';
+import 'core/storage/local_storage_service.dart';
+import 'core/theme/app_theme.dart';
 import 'core/utils/constants.dart';
 
-void main() {
-  runApp(const ProviderScope(child: DermaCareApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences? prefs;
+  try {
+    prefs = await SharedPreferences.getInstance();
+  } catch (e) {
+    debugPrint('Could not initialize SharedPreferences: $e');
+  }
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        if (prefs != null)
+          localStorageServiceProvider.overrideWithValue(LocalStorageService(prefs)),
+      ],
+      child: const DermaCareApp(),
+    ),
+  );
 }
 
 /// Root application widget

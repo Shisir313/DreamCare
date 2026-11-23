@@ -1,0 +1,4164 @@
+openapi: 3.0.3
+info:
+  title: DermaCare Nepal API
+  version: 1.0.0
+  description: Backend REST API contract for DermaCare - Personalized skincare and
+    dermatology consultation platform for Nepal.
+paths:
+  /api/v1/auth/email/verify/confirm/:
+    post:
+      operationId: auth_email_verify_confirm_create
+      description: Verifies user's email address using token.
+      summary: Confirm Email Verification
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerifyConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailVerifyConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailVerifyConfirmRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailVerifyConfirmResponse'
+          description: ''
+  /api/v1/auth/email/verify/request/:
+    post:
+      operationId: auth_email_verify_request_create
+      description: Generates an email verification token for the current user.
+      summary: Request Email Verification
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailVerifyRequestResponse'
+          description: ''
+  /api/v1/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: Authenticates with email or Nepal phone number + password. Returns
+        JWT pair and user profile.
+      summary: Login with Phone or Email
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+          description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: Blacklists the provided refresh token.
+      summary: Logout
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+          description: ''
+  /api/v1/auth/me/:
+    get:
+      operationId: auth_me_retrieve
+      description: Returns full profile of currently authenticated user.
+      summary: Get Current User Profile
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: auth_me_partial_update
+      description: 'Update profile attributes: name, phone, or date of birth.'
+      summary: Update Current User Profile
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    delete:
+      operationId: auth_me_destroy
+      description: Permanently erases user database records and all facial photographs
+        from storage.
+      summary: Permanently Delete Account & Photos
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHardDeleteInlineResponse'
+          description: ''
+  /api/v1/auth/me/export/:
+    get:
+      operationId: auth_me_export_retrieve
+      description: Returns full machine-readable JSON archive of user account, clinical
+        assessments, consents, and photos.
+      summary: Export User Data Archive
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataExportResponse'
+          description: ''
+  /api/v1/auth/password/change/:
+    post:
+      operationId: auth_password_change_create
+      description: Changes user password upon confirming current password.
+      summary: Change Password
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordResponse'
+          description: ''
+  /api/v1/auth/password/reset/confirm/:
+    post:
+      operationId: auth_password_reset_confirm_create
+      description: Resets user password with valid 6-digit code or reset token.
+      summary: Confirm Password Reset
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirmResponse'
+          description: ''
+  /api/v1/auth/password/reset/request/:
+    post:
+      operationId: auth_password_reset_request_create
+      description: Sends a 6-digit reset code or token to user email or phone.
+      summary: Request Password Reset
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetRequestResponse'
+          description: ''
+  /api/v1/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: Creates a new patient user account. Dermatologists and admins are
+        provisioned by admin.
+      summary: Register New Patient
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+          description: ''
+  /api/v1/auth/token/:
+    post:
+      operationId: auth_token_create
+      description: Takes email and password credentials and returns an access token
+        (15m) and refresh token (7d).
+      summary: Obtain JWT Token Pair
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: Takes a valid refresh token and returns a new access token while
+        rotating and blacklisting the previous refresh token.
+      summary: Refresh JWT Access Token
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTokenRefresh'
+          description: ''
+  /api/v1/check-ins/:
+    get:
+      operationId: check_ins_list
+      description: Returns list of prescriptions for current patient or authoring
+        doctor.
+      summary: List Prescriptions
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prescription'
+          description: ''
+    post:
+      operationId: check_ins_create
+      description: Authored exclusively by verified dermatologists.
+      summary: Create Prescription
+      tags:
+      - Prescriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/check-ins/{prescription_id}/:
+    get:
+      operationId: check_ins_retrieve
+      description: Retrieves prescription details. Logs read audit record when accessed
+        by patient.
+      summary: Get Prescription Details
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/check-ins/{prescription_id}/amend/:
+    post:
+      operationId: check_ins_amend_create
+      description: Creates version v+1 amendment while retaining the published historical
+        record.
+      summary: Amend Prescription
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/check-ins/{prescription_id}/publish/:
+    post:
+      operationId: check_ins_publish_create
+      description: Locks clinical contents permanently as an immutable record.
+      summary: Publish Prescription
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/check-ins/check-ins/{checkin_id}/review/:
+    post:
+      operationId: check_ins_check_ins_review_create
+      description: Dermatologist reviews photos and submits clinical guidance.
+      summary: Review Weekly Check-in
+      parameters:
+      - in: path
+        name: checkin_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Check-ins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/check-ins/check-ins/history/:
+    get:
+      operationId: check_ins_check_ins_history_list
+      description: View past check-ins and clinical feedbacks. Unlocked permanently
+        even after plan expiry.
+      summary: Check-in History
+      tags:
+      - Check-ins
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/check-ins/check-ins/status/:
+    get:
+      operationId: check_ins_check_ins_status_list
+      description: Returns 4-week unlock schedule, unlock dates in Asia/Kathmandu,
+        and submission status.
+      summary: Weekly Check-in Status
+      tags:
+      - Check-ins
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyCheckInStatusOverview'
+          description: ''
+  /api/v1/check-ins/check-ins/submit/:
+    post:
+      operationId: check_ins_check_ins_submit_create
+      description: Uploads front, left, and right photos + optional note. Consumes
+        check-in entitlement.
+      summary: Submit Weekly Check-in
+      tags:
+      - Check-ins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/consent/accept/:
+    post:
+      operationId: consent_accept_create
+      description: Records acceptance of specific policy types and versions. Stores
+        cryptographic hash of IP and UA.
+      summary: Accept Policies
+      tags:
+      - Consent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptConsentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptConsentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptConsentRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentStatusResponse'
+          description: ''
+  /api/v1/consent/policies/:
+    get:
+      operationId: consent_policies_list
+      description: Returns list of all active policies, their versions, legal summaries,
+        and user acceptance status.
+      summary: List Active Consent Policies
+      tags:
+      - Consent
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentPolicy'
+          description: ''
+  /api/v1/consent/status/:
+    get:
+      operationId: consent_status_retrieve
+      description: Returns whether the user has satisfied all mandatory active policy
+        requirements.
+      summary: Check User Consent Status
+      tags:
+      - Consent
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentStatusResponse'
+          description: ''
+  /api/v1/consultations/appointments/:
+    get:
+      operationId: consultations_appointments_list
+      description: Returns list of consultation appointments for the current user.
+      summary: List Appointments
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/consultations/appointments/{appointment_id}/:
+    get:
+      operationId: consultations_appointments_retrieve
+      description: Returns appointment metadata, status, symptoms, and doctor info.
+      summary: Get Appointment Details
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/consultations/appointments/{appointment_id}/cancel/:
+    post:
+      operationId: consultations_appointments_cancel_create
+      description: Cancels appointment, releases availability slot, and restores entitlement
+        if > 2h before start.
+      summary: Cancel Appointment
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/consultations/appointments/{appointment_id}/reschedule/:
+    post:
+      operationId: consultations_appointments_reschedule_create
+      description: Atomically swaps to a new slot with the same doctor.
+      summary: Reschedule Appointment
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RescheduleAppointmentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RescheduleAppointmentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RescheduleAppointmentRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/consultations/appointments/{appointment_id}/video-token/:
+    post:
+      operationId: consultations_appointments_video_token_create
+      description: Issues temporary RTC token. Enforces join window (15 minutes prior
+        to appointment start time).
+      summary: Generate Agora Video Room Token
+      parameters:
+      - in: path
+        name: appointment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTokenResponse'
+          description: ''
+  /api/v1/consultations/book/:
+    post:
+      operationId: consultations_book_create
+      description: Atomically locks slot and decrements consultation entitlement from
+        active membership.
+      summary: Book Appointment
+      tags:
+      - Consultations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookAppointmentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BookAppointmentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BookAppointmentRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/consultations/doctors/:
+    get:
+      operationId: consultations_doctors_list
+      description: Returns list of administrative-verified dermatologists. Supports
+        specialty and search query filters.
+      summary: List Verified Doctors
+      parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search by name, qualifications, or hospital
+      - in: query
+        name: specialty
+        schema:
+          type: string
+        description: Filter by specialty (e.g. dermatologist, cosmetologist)
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+          description: ''
+  /api/v1/consultations/doctors/{doctor_id}/:
+    get:
+      operationId: consultations_doctors_retrieve
+      description: Returns full profile of a verified doctor including fees, languages,
+        and qualifications.
+      summary: Get Doctor Profile Details
+      parameters:
+      - in: path
+        name: doctor_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+  /api/v1/consultations/doctors/{doctor_id}/slots/:
+    get:
+      operationId: consultations_doctors_slots_list
+      description: Returns available unbooked slots for a doctor on a date in Asia/Kathmandu.
+      summary: List Doctor Available Slots
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+        description: Date in YYYY-MM-DD format (Asia/Kathmandu)
+      - in: path
+        name: doctor_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Consultations
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeSlot'
+          description: ''
+  /api/v1/consultations/slots/create/:
+    post:
+      operationId: consultations_slots_create_create
+      description: Doctor creates a consultation availability slot.
+      summary: Create Availability Slot
+      tags:
+      - Consultations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSlotRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateSlotRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateSlotRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlot'
+          description: ''
+  /api/v1/health/:
+    get:
+      operationId: health_retrieve
+      description: Returns system operational status, UTC & Asia/Kathmandu timestamps,
+        and database health.
+      summary: System Health Check
+      tags:
+      - System
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+          description: ''
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckErrorResponse'
+          description: ''
+  /api/v1/hydration/goal/:
+    get:
+      operationId: hydration_goal_retrieve
+      description: Returns target ml, glasses, and clinical calculation limitations
+        disclaimer.
+      summary: Get Hydration Target
+      tags:
+      - Hydration
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HydrationGoal'
+          description: ''
+  /api/v1/hydration/goal/calculate/:
+    post:
+      operationId: hydration_goal_calculate_create
+      description: Calculates recommended fluid intake based on weight in kg (35 mL/kg).
+      summary: Recalculate Hydration Goal
+      tags:
+      - Hydration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HydrationGoal'
+          description: ''
+  /api/v1/hydration/log/:
+    post:
+      operationId: hydration_log_create
+      description: Records consumed water glasses for today.
+      summary: Log Water Intake
+      tags:
+      - Hydration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogWaterResponse'
+          description: ''
+  /api/v1/hydration/today/:
+    get:
+      operationId: hydration_today_retrieve
+      description: Returns glasses completed, goal, progress, and intake timestamps
+        for Flutter.
+      summary: Get Today's Water Tracking
+      tags:
+      - Hydration
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodayWaterResponse'
+          description: ''
+  /api/v1/me/:
+    get:
+      operationId: me_retrieve
+      description: Returns full profile of currently authenticated user.
+      summary: Get Current User Profile
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: me_partial_update
+      description: 'Update profile attributes: name, phone, or date of birth.'
+      summary: Update Current User Profile
+      tags:
+      - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    delete:
+      operationId: me_destroy
+      description: Permanently erases user database records and all facial photographs
+        from storage.
+      summary: Permanently Delete Account & Photos
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHardDeleteInlineResponse'
+          description: ''
+  /api/v1/me/export/:
+    get:
+      operationId: me_export_retrieve
+      description: Returns full machine-readable JSON archive of user account, clinical
+        assessments, consents, and photos.
+      summary: Export User Data Archive
+      tags:
+      - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataExportResponse'
+          description: ''
+  /api/v1/memberships/{membership_id}/cancel/:
+    post:
+      operationId: memberships_cancel_create
+      description: Transitions membership state to cancelled.
+      summary: Cancel Membership
+      parameters:
+      - in: path
+        name: membership_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Memberships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelMembershipRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelMembershipRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CancelMembershipRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+          description: ''
+  /api/v1/memberships/current/:
+    get:
+      operationId: memberships_current_retrieve
+      description: Returns currently active membership with live consultation and
+        check-in counts. Enforces request-time expiry.
+      summary: Get Active Membership
+      tags:
+      - Memberships
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+          description: ''
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoActiveMembershipResponse'
+          description: ''
+  /api/v1/memberships/history/:
+    get:
+      operationId: memberships_history_list
+      description: Returns all historical and present memberships for current user.
+      summary: Get Membership History
+      tags:
+      - Memberships
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Membership'
+          description: ''
+  /api/v1/memberships/plans/:
+    get:
+      operationId: memberships_plans_list
+      description: Returns list of admin-editable plans, duration, entitlements, and
+        price in paisa and NPR.
+      summary: List Available Plans
+      tags:
+      - Memberships
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
+          description: ''
+  /api/v1/memberships/select/:
+    post:
+      operationId: memberships_select_create
+      description: Selects a plan and provisions a pending membership ready for payment
+        processing.
+      summary: Select Plan (Checkout Init)
+      tags:
+      - Memberships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelectPlanRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SelectPlanRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SelectPlanRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Membership'
+          description: ''
+  /api/v1/notifications/:
+    get:
+      operationId: notifications_list
+      description: Returns user notifications sorted by newest first.
+      summary: List Notifications
+      tags:
+      - Notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/{notification_id}/read/:
+    post:
+      operationId: notifications_read_create
+      description: Marks a specific notification as read.
+      summary: Mark Notification as Read
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/devices/register/:
+    post:
+      operationId: notifications_devices_register_create
+      description: Registers device FCM registration token for push notifications.
+      summary: Register Device Push Token
+      tags:
+      - Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceToken'
+          description: ''
+  /api/v1/notifications/mark-all-read/:
+    post:
+      operationId: notifications_mark_all_read_create
+      description: Marks all unread notifications for current user as read.
+      summary: Mark All Notifications as Read
+      tags:
+      - Notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/payments/checkout/initiate/:
+    post:
+      operationId: payments_checkout_initiate_create
+      description: Generates eSewa signed HMAC form fields or Khalti pidx token and
+        payment URL.
+      summary: Initiate Gateway Checkout
+      tags:
+      - Payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateCheckoutRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InitiateCheckoutRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InitiateCheckoutRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutInitiateResponse'
+          description: ''
+  /api/v1/payments/orders/{order_id}/:
+    get:
+      operationId: payments_orders_retrieve
+      description: Returns order status and history of payment attempts.
+      summary: Get Payment Order Details
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Payments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentOrder'
+          description: ''
+  /api/v1/payments/orders/create/:
+    post:
+      operationId: payments_orders_create_create
+      description: Creates an order for a pending membership or consultation fee in
+        integer paisa.
+      summary: Create Payment Order
+      tags:
+      - Payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentOrder'
+          description: ''
+  /api/v1/payments/verify/:
+    post:
+      operationId: payments_verify_create
+      description: Performs authoritative S2S status check against gateway API. Activates
+        membership upon success.
+      summary: Verify Payment (Server-to-Server)
+      tags:
+      - Payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyPaymentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyPaymentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyPaymentRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentVerificationResponse'
+          description: ''
+  /api/v1/payments/webhook/{gateway}/:
+    post:
+      operationId: payments_webhook_create
+      description: Receives gateway IPN/webhook. Queries gateway status API authoritatively.
+      summary: Payment Gateway Webhook
+      parameters:
+      - in: path
+        name: gateway
+        schema:
+          type: string
+        required: true
+      tags:
+      - Payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GatewayWebhookRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GatewayWebhookRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GatewayWebhookRequestRequest'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayWebhookResponse'
+          description: ''
+  /api/v1/photos/:
+    get:
+      operationId: photos_list
+      description: Returns all active face photos for current user with short-lived
+        signed URLs.
+      summary: List Face Photos
+      tags:
+      - Photos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FacePhotoResponse'
+          description: ''
+  /api/v1/photos/{photo_id}/url/:
+    get:
+      operationId: photos_url_retrieve
+      description: Generates an audited 15-minute cryptographically signed URL to
+        view a photo.
+      summary: Get Photo Signed URL
+      parameters:
+      - in: path
+        name: photo_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Photos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedUrlResponse'
+          description: ''
+  /api/v1/photos/upload/:
+    post:
+      operationId: photos_upload_create
+      description: 'Uploads a face photo (angle: front, left, right). Strips EXIF
+        metadata, stores in private vault.'
+      summary: Upload Face Photo
+      tags:
+      - Photos
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacePhotoUploadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacePhotoUploadRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacePhotoResponse'
+          description: ''
+  /api/v1/photos/view/{token}/:
+    get:
+      operationId: photos_view_retrieve
+      description: Validates signed token and streams photo binary. Never caches on
+        public CDNs.
+      summary: Stream Private Photo
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - Photos
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/v1/plans/:
+    get:
+      operationId: plans_list
+      description: Returns list of admin-editable plans, duration, entitlements, and
+        price in paisa and NPR.
+      summary: List Available Plans
+      tags:
+      - Memberships
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
+          description: ''
+  /api/v1/prescriptions/:
+    get:
+      operationId: prescriptions_list
+      description: Returns list of prescriptions for current patient or authoring
+        doctor.
+      summary: List Prescriptions
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prescription'
+          description: ''
+    post:
+      operationId: prescriptions_create
+      description: Authored exclusively by verified dermatologists.
+      summary: Create Prescription
+      tags:
+      - Prescriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/prescriptions/{prescription_id}/:
+    get:
+      operationId: prescriptions_retrieve
+      description: Retrieves prescription details. Logs read audit record when accessed
+        by patient.
+      summary: Get Prescription Details
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/prescriptions/{prescription_id}/amend/:
+    post:
+      operationId: prescriptions_amend_create
+      description: Creates version v+1 amendment while retaining the published historical
+        record.
+      summary: Amend Prescription
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AmendPrescriptionRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/prescriptions/{prescription_id}/publish/:
+    post:
+      operationId: prescriptions_publish_create
+      description: Locks clinical contents permanently as an immutable record.
+      summary: Publish Prescription
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Prescriptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+          description: ''
+  /api/v1/prescriptions/check-ins/{checkin_id}/review/:
+    post:
+      operationId: prescriptions_check_ins_review_create
+      description: Dermatologist reviews photos and submits clinical guidance.
+      summary: Review Weekly Check-in
+      parameters:
+      - in: path
+        name: checkin_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Check-ins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewCheckInRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/prescriptions/check-ins/history/:
+    get:
+      operationId: prescriptions_check_ins_history_list
+      description: View past check-ins and clinical feedbacks. Unlocked permanently
+        even after plan expiry.
+      summary: Check-in History
+      tags:
+      - Check-ins
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/prescriptions/check-ins/status/:
+    get:
+      operationId: prescriptions_check_ins_status_list
+      description: Returns 4-week unlock schedule, unlock dates in Asia/Kathmandu,
+        and submission status.
+      summary: Weekly Check-in Status
+      tags:
+      - Check-ins
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyCheckInStatusOverview'
+          description: ''
+  /api/v1/prescriptions/check-ins/submit/:
+    post:
+      operationId: prescriptions_check_ins_submit_create
+      description: Uploads front, left, and right photos + optional note. Consumes
+        check-in entitlement.
+      summary: Submit Weekly Check-in
+      tags:
+      - Check-ins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WeeklyCheckInSubmissionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyCheckIn'
+          description: ''
+  /api/v1/profile/lifestyle/:
+    get:
+      operationId: profile_lifestyle_retrieve
+      description: Returns height, weight, sleep, stress, activity level, and server-side
+        computed BMI.
+      summary: Get Lifestyle Profile & Measurements
+      tags:
+      - Profiles
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifestyleProfile'
+          description: ''
+    put:
+      operationId: profile_lifestyle_update
+      description: Updates height, weight, sleep hours, stress level, and activity
+        level. Calculates BMI.
+      summary: Create or Update Lifestyle Profile
+      tags:
+      - Profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifestyleProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LifestyleProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LifestyleProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifestyleProfile'
+          description: ''
+    patch:
+      operationId: profile_lifestyle_partial_update
+      description: Partially updates lifestyle attributes and measurements.
+      summary: Partially Update Lifestyle Profile
+      tags:
+      - Profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLifestyleProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLifestyleProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLifestyleProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifestyleProfile'
+          description: ''
+  /api/v1/profile/skin/:
+    get:
+      operationId: profile_skin_retrieve
+      description: Returns skin profile attributes, concerns, and routine level. Requires
+        active consent.
+      summary: Get Skin Profile
+      tags:
+      - Profiles
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkinProfile'
+          description: ''
+    put:
+      operationId: profile_skin_update
+      description: Updates skin type, skin tone, reported conditions, concerns, routine
+        level, and sun exposure.
+      summary: Create or Update Skin Profile
+      tags:
+      - Profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkinProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SkinProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SkinProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkinProfile'
+          description: ''
+    patch:
+      operationId: profile_skin_partial_update
+      description: Partially updates skin profile attributes.
+      summary: Partially Update Skin Profile
+      tags:
+      - Profiles
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSkinProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSkinProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSkinProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkinProfile'
+          description: ''
+  /api/v1/routines/current/:
+    get:
+      operationId: routines_current_retrieve
+      description: Returns currently active routine and tasks for the user.
+      summary: Get Current Active Routine
+      tags:
+      - Routines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoutine'
+          description: ''
+  /api/v1/routines/daily-summary/:
+    get:
+      operationId: routines_daily_summary_retrieve
+      description: Returns daily routine task completion and hydration progress in
+        Asia/Kathmandu.
+      summary: Get Daily Progress Summary
+      tags:
+      - Routines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailySummaryResponse'
+          description: ''
+  /api/v1/routines/generate/:
+    post:
+      operationId: routines_generate_create
+      description: Evaluates versioned rules against patient's skin and lifestyle
+        profiles to create AM/PM routine.
+      summary: Generate Personalized Routine
+      tags:
+      - Routines
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoutine'
+          description: ''
+  /api/v1/routines/hydration/goal/:
+    get:
+      operationId: routines_hydration_goal_retrieve
+      description: Returns target ml, glasses, and clinical calculation limitations
+        disclaimer.
+      summary: Get Hydration Target
+      tags:
+      - Hydration
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HydrationGoal'
+          description: ''
+  /api/v1/routines/hydration/goal/calculate/:
+    post:
+      operationId: routines_hydration_goal_calculate_create
+      description: Calculates recommended fluid intake based on weight in kg (35 mL/kg).
+      summary: Recalculate Hydration Goal
+      tags:
+      - Hydration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CalculateHydrationRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HydrationGoal'
+          description: ''
+  /api/v1/routines/hydration/log/:
+    post:
+      operationId: routines_hydration_log_create
+      description: Records consumed water glasses for today.
+      summary: Log Water Intake
+      tags:
+      - Hydration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogWaterIntakeRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogWaterResponse'
+          description: ''
+  /api/v1/routines/hydration/today/:
+    get:
+      operationId: routines_hydration_today_retrieve
+      description: Returns glasses completed, goal, progress, and intake timestamps
+        for Flutter.
+      summary: Get Today's Water Tracking
+      tags:
+      - Hydration
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodayWaterResponse'
+          description: ''
+  /api/v1/routines/reminders/:
+    get:
+      operationId: routines_reminders_retrieve
+      description: Returns user reminder notification times for AM/PM routines and
+        hydration.
+      summary: Get Reminder Preferences
+      tags:
+      - Routines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReminderPreference'
+          description: ''
+    put:
+      operationId: routines_reminders_update
+      description: Updates reminder times and hydration alert intervals.
+      summary: Update Reminder Preferences
+      tags:
+      - Routines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderPreferenceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReminderPreferenceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReminderPreferenceRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReminderPreference'
+          description: ''
+  /api/v1/routines/tasks/{task_id}/toggle/:
+    post:
+      operationId: routines_tasks_toggle_create
+      description: Checks off or unchecks a routine task for today in Asia/Kathmandu.
+      summary: Toggle Routine Task Completion
+      parameters:
+      - in: path
+        name: task_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Routines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToggleTaskResponse'
+          description: ''
+components:
+  schemas:
+    AcceptConsentRequestRequest:
+      type: object
+      properties:
+        consents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyAcceptItemRequest'
+      required:
+      - consents
+    AccountHardDeleteInlineResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      required:
+      - message
+      - status
+    ActivityLevelEnum:
+      enum:
+      - sedentary
+      - light
+      - moderate
+      - active
+      type: string
+      description: |-
+        * `sedentary` - Sedentary
+        * `light` - Light (1-2 days/week)
+        * `moderate` - Moderate (3-4 days/week)
+        * `active` - Active (5+ days/week)
+    AmendPrescriptionRequestRequest:
+      type: object
+      properties:
+        diagnosis:
+          type: string
+          minLength: 1
+          maxLength: 255
+        medications:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationRequest'
+        instructions:
+          type: string
+        notes:
+          type: string
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+        lab_tests:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        publish_now:
+          type: boolean
+          default: true
+    AngleEnum:
+      enum:
+      - front
+      - left
+      - right
+      type: string
+      description: |-
+        * `front` - Front Facing
+        * `left` - Left Profile (45°/90°)
+        * `right` - Right Profile (45°/90°)
+    Appointment:
+      type: object
+      description: Appointment model matching Flutter Appointment representation.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        doctorId:
+          type: string
+          format: uuid
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          readOnly: true
+        dateTime:
+          type: string
+          format: date-time
+          readOnly: true
+        type:
+          type: string
+        status:
+          type: string
+        fee:
+          type: integer
+          readOnly: true
+        feePaisa:
+          type: integer
+          readOnly: true
+        doctor:
+          allOf:
+          - $ref: '#/components/schemas/Doctor'
+          readOnly: true
+        symptoms:
+          type: string
+        notes:
+          type: string
+        roomChannel:
+          type: string
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - createdAt
+      - dateTime
+      - doctor
+      - doctorId
+      - fee
+      - feePaisa
+      - id
+      - notes
+      - roomChannel
+      - status
+      - symptoms
+      - type
+      - userId
+    AuthSuccessResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserProfile'
+      required:
+      - access
+      - refresh
+      - user
+    BookAppointmentRequestRequest:
+      type: object
+      properties:
+        slot_id:
+          type: string
+          format: uuid
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeEnum'
+          default: video
+        symptoms:
+          type: string
+          default: ''
+      required:
+      - slot_id
+    CalculateHydrationRequestRequest:
+      type: object
+      properties:
+        weight_kg:
+          type: number
+          format: double
+          maximum: 300
+          minimum: 20
+    CancelAppointmentRequestRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          default: ''
+    CancelMembershipRequestRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          default: ''
+    ChangePasswordRequest:
+      type: object
+      properties:
+        current_password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - current_password
+      - new_password
+    ChangePasswordResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    CheckoutInitiateResponse:
+      type: object
+      properties:
+        gateway:
+          type: string
+        amount_npr:
+          type: number
+          format: double
+        form_fields:
+          type: object
+          additionalProperties: {}
+        payment_url:
+          type: string
+          format: uri
+      required:
+      - amount_npr
+      - gateway
+    CodeEnum:
+      enum:
+      - basic
+      - premium
+      - pay_per_consultation
+      type: string
+      description: |-
+        * `basic` - Basic Plan
+        * `premium` - Premium Plan
+        * `pay_per_consultation` - Pay-per-Consultation
+    ConsentPolicy:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        policy_type:
+          allOf:
+          - $ref: '#/components/schemas/PolicyTypeEnum'
+          description: |-
+            Type of policy (e.g. privacy, health data, terms)
+
+            * `terms_of_service` - Terms of Service
+            * `privacy_policy` - Privacy Policy
+            * `health_data_consent` - Health Data Consent
+            * `telemedicine_consent` - Telemedicine Consent
+        version:
+          type: string
+          description: Policy version identifier (e.g. 1.0, 1.1)
+          maxLength: 20
+        title:
+          type: string
+          maxLength: 255
+        summary:
+          type: string
+          description: Summary or plain-language description of this policy version
+        document_url:
+          description: Link to full legal text
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        is_mandatory:
+          type: boolean
+          description: Whether acceptance is required to access medical and onboarding
+            features
+        is_active:
+          type: boolean
+          description: Whether this is the currently active version for new consents
+        is_accepted:
+          type: boolean
+          readOnly: true
+      required:
+      - id
+      - is_accepted
+      - policy_type
+      - summary
+      - title
+      - version
+    ConsentStatusResponse:
+      type: object
+      properties:
+        has_current_consent:
+          type: boolean
+        missing_policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentPolicy'
+      required:
+      - has_current_consent
+      - missing_policies
+    CreateOrderRequestRequest:
+      type: object
+      properties:
+        membership_id:
+          type: string
+          format: uuid
+        order_type:
+          allOf:
+          - $ref: '#/components/schemas/OrderTypeEnum'
+          default: membership
+        amount_paisa:
+          type: integer
+          minimum: 100
+        idempotency_key:
+          type: string
+          minLength: 1
+          maxLength: 100
+    CreatePrescriptionRequestRequest:
+      type: object
+      properties:
+        patient_id:
+          type: string
+          format: uuid
+        appointment_id:
+          type: string
+          format: uuid
+          nullable: true
+        diagnosis:
+          type: string
+          minLength: 1
+          maxLength: 255
+        medications:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationRequest'
+        instructions:
+          type: string
+          default: ''
+        notes:
+          type: string
+          default: ''
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+        lab_tests:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        publish_now:
+          type: boolean
+          default: true
+      required:
+      - diagnosis
+      - medications
+      - patient_id
+    CreateSlotRequestRequest:
+      type: object
+      properties:
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+      required:
+      - end_time
+      - start_time
+    CustomTokenObtainPairRequest:
+      type: object
+      description: SimpleJWT serializer adding user claims into JWT token and response.
+      properties:
+        email:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    CustomTokenRefresh:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    CustomTokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    DailySummaryResponse:
+      type: object
+      properties:
+        date:
+          type: string
+        routine:
+          type: object
+          additionalProperties: {}
+        hydration:
+          type: object
+          additionalProperties: {}
+      required:
+      - date
+      - hydration
+      - routine
+    DeviceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        fcmToken:
+          type: string
+        deviceType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - createdAt
+      - deviceType
+      - fcmToken
+      - id
+    DeviceTypeEnum:
+      enum:
+      - android
+      - ios
+      - web
+      type: string
+      description: |-
+        * `android` - Android
+        * `ios` - iOS
+        * `web` - Web
+    Doctor:
+      type: object
+      description: Doctor representation matching Flutter Doctor model.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        specialty:
+          type: string
+        qualifications:
+          type: string
+        experience:
+          type: integer
+        rating:
+          type: number
+          format: double
+        totalReviews:
+          type: integer
+        consultationFee:
+          type: integer
+        consultationFeePaisa:
+          type: integer
+        availableDays:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        photoUrl:
+          type: string
+        hospital:
+          type: string
+        about:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        isAvailableToday:
+          type: boolean
+          readOnly: true
+        isVerified:
+          type: boolean
+      required:
+      - about
+      - availableDays
+      - consultationFee
+      - consultationFeePaisa
+      - experience
+      - hospital
+      - id
+      - isAvailableToday
+      - isVerified
+      - languages
+      - name
+      - photoUrl
+      - qualifications
+      - rating
+      - specialty
+      - totalReviews
+    EmailVerifyConfirmRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+          maxLength: 64
+      required:
+      - token
+    EmailVerifyConfirmResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    EmailVerifyRequestResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    FacePhotoResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        angle:
+          $ref: '#/components/schemas/AngleEnum'
+        file_size:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: File size in bytes
+        content_type:
+          type: string
+          maxLength: 50
+        signed_url:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+      required:
+      - created_at
+      - file_size
+      - id
+      - signed_url
+    FacePhotoUploadRequest:
+      type: object
+      properties:
+        angle:
+          allOf:
+          - $ref: '#/components/schemas/AngleEnum'
+          default: front
+        file:
+          type: string
+          format: binary
+          description: Facial image file (JPEG, PNG, WEBP, up to 10MB)
+      required:
+      - file
+    GatewayEnum:
+      enum:
+      - esewa
+      - khalti
+      type: string
+      description: |-
+        * `esewa` - eSewa
+        * `khalti` - Khalti
+    GatewayWebhookRequestRequest:
+      type: object
+      properties:
+        transaction_uuid:
+          type: string
+          minLength: 1
+        pidx:
+          type: string
+          minLength: 1
+    GatewayWebhookResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        is_verified:
+          type: boolean
+      required:
+      - is_verified
+      - status
+    HealthCheckErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          default: unhealthy
+        database:
+          type: string
+      required:
+      - database
+    HealthCheckResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          default: ok
+        environment:
+          type: string
+        timezone:
+          type: string
+          default: Asia/Kathmandu
+        utc_time:
+          type: string
+          format: date-time
+        local_time:
+          type: string
+          format: date-time
+        database:
+          type: string
+          default: connected
+      required:
+      - environment
+      - local_time
+      - utc_time
+    HydrationGoal:
+      type: object
+      properties:
+        daily_goal_ml:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Target milliliters per day
+        daily_goal_glasses:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Equivalent in 250ml glasses
+        formula_citation:
+          type: string
+          maxLength: 255
+        limitations_disclaimer:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was last updated (UTC)
+      required:
+      - updated_at
+    InitiateCheckoutRequestRequest:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        gateway:
+          $ref: '#/components/schemas/GatewayEnum'
+        return_url:
+          type: string
+          format: uri
+          minLength: 1
+          default: https://dermacare.np/payment/callback
+      required:
+      - gateway
+      - order_id
+    LifestyleProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          description: Height in centimetres
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          description: Weight in kilograms
+        age:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Age in years (derived or reported)
+        sleep_hours:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Average hours of sleep per night
+        stress_level:
+          $ref: '#/components/schemas/StressLevelEnum'
+        activity_level:
+          $ref: '#/components/schemas/ActivityLevelEnum'
+        bmi:
+          type: number
+          format: double
+          readOnly: true
+        bmi_category:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was last updated (UTC)
+      required:
+      - bmi
+      - bmi_category
+      - created_at
+      - id
+      - updated_at
+    LifestyleProfileRequest:
+      type: object
+      properties:
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          description: Height in centimetres
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          description: Weight in kilograms
+        age:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Age in years (derived or reported)
+        sleep_hours:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Average hours of sleep per night
+        stress_level:
+          $ref: '#/components/schemas/StressLevelEnum'
+        activity_level:
+          $ref: '#/components/schemas/ActivityLevelEnum'
+    LogWaterIntakeRequestRequest:
+      type: object
+      properties:
+        glasses:
+          type: integer
+          maximum: 20
+          minimum: 1
+          default: 1
+    LogWaterResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        glassesLogged:
+          type: integer
+      required:
+      - glassesLogged
+      - status
+    LoginRequestRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: Phone number or email
+        email:
+          description: Email address
+          oneOf:
+          - type: string
+            format: email
+          - type: string
+            maxLength: 0
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+    LogoutRequestRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+          description: The refresh token to be blacklisted
+      required:
+      - refresh
+    LogoutResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    Medication:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        dosage:
+          type: string
+          maxLength: 100
+        frequency:
+          type: string
+          maxLength: 100
+        duration:
+          type: string
+          maxLength: 100
+        instructions:
+          type: string
+          default: ''
+        beforeMeal:
+          type: boolean
+          default: false
+      required:
+      - dosage
+      - duration
+      - frequency
+      - name
+    MedicationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        dosage:
+          type: string
+          minLength: 1
+          maxLength: 100
+        frequency:
+          type: string
+          minLength: 1
+          maxLength: 100
+        duration:
+          type: string
+          minLength: 1
+          maxLength: 100
+        instructions:
+          type: string
+          default: ''
+        beforeMeal:
+          type: boolean
+          default: false
+      required:
+      - dosage
+      - duration
+      - frequency
+      - name
+    Membership:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        plan:
+          allOf:
+          - $ref: '#/components/schemas/Plan'
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/MembershipStatusEnum'
+        start_date:
+          type: string
+          format: date-time
+          nullable: true
+        end_date:
+          type: string
+          format: date-time
+          nullable: true
+        consultations_remaining:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Live count of available consultations
+        checkins_remaining:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Live count of available weekly check-ins
+        is_currently_active:
+          type: boolean
+          readOnly: true
+        auto_renew:
+          type: boolean
+          description: 'Always False: DermaCare plans are one-time payments with no
+            auto-renewal.'
+        activated_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+      required:
+      - created_at
+      - id
+      - is_currently_active
+      - plan
+    MembershipStatusEnum:
+      enum:
+      - pending
+      - active
+      - expired
+      - cancelled
+      type: string
+      description: |-
+        * `pending` - Pending Payment
+        * `active` - Active
+        * `expired` - Expired
+        * `cancelled` - Cancelled
+    NoActiveMembershipResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    Notification:
+      type: object
+      description: Notification representation matching Flutter notification model.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+        body:
+          type: string
+        type:
+          type: string
+        unread:
+          type: boolean
+          readOnly: true
+        isRead:
+          type: boolean
+        data: {}
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - body
+      - createdAt
+      - data
+      - id
+      - isRead
+      - title
+      - type
+      - unread
+    OrderTypeEnum:
+      enum:
+      - membership
+      - consultation
+      type: string
+      description: |-
+        * `membership` - Membership Subscription
+        * `consultation` - Single Consultation Fee
+    PasswordResetConfirmRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 1
+          description: 6-digit reset code or token
+          maxLength: 64
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - code
+      - new_password
+    PasswordResetConfirmResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    PasswordResetRequestRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+          minLength: 1
+          description: Email address or phone number
+      required:
+      - identifier
+    PasswordResetRequestResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    PatchedLifestyleProfileRequest:
+      type: object
+      properties:
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          description: Height in centimetres
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          description: Weight in kilograms
+        age:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Age in years (derived or reported)
+        sleep_hours:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Average hours of sleep per night
+        stress_level:
+          $ref: '#/components/schemas/StressLevelEnum'
+        activity_level:
+          $ref: '#/components/schemas/ActivityLevelEnum'
+    PatchedSkinProfileRequest:
+      type: object
+      properties:
+        skin_type:
+          allOf:
+          - $ref: '#/components/schemas/SkinTypeEnum'
+          description: |-
+            Primary skin classification
+
+            * `dry` - Dry
+            * `oily` - Oily
+            * `combination` - Combination
+            * `normal` - Normal
+            * `sensitive` - Sensitive
+        skin_tone:
+          allOf:
+          - $ref: '#/components/schemas/SkinToneEnum'
+          description: |-
+            Fitzpatrick skin tone estimate
+
+            * `fair` - Fair (Fitzpatrick I-II)
+            * `medium` - Medium (Fitzpatrick III-IV)
+            * `olive` - Olive (Fitzpatrick IV-V)
+            * `deep` - Deep (Fitzpatrick V-VI)
+        conditions:
+          description: Reported clinical conditions (e.g. eczema, psoriasis, rosacea,
+            acne)
+        concerns:
+          description: Primary concerns (e.g. acne, darkSpots, wrinkles, redness,
+            dryness, oiliness)
+        goals:
+          description: User goals (e.g. clearSkin, evenTone, hydration, oilControl)
+        routine_level:
+          allOf:
+          - $ref: '#/components/schemas/RoutineLevelEnum'
+          description: |-
+            Preferred complexity of daily routine
+
+            * `beginner` - Beginner (1-2 steps)
+            * `intermediate` - Intermediate (3-4 steps)
+            * `advanced` - Advanced (5+ steps)
+        sun_exposure:
+          allOf:
+          - $ref: '#/components/schemas/SunExposureEnum'
+          description: |-
+            Daily UV/sunlight exposure level
+
+            * `low` - Low (< 1 hour daily)
+            * `moderate` - Moderate (1-3 hours daily)
+            * `high` - High (3+ hours daily)
+    PatchedUpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Full legal or preferred name
+          maxLength: 255
+        phone:
+          type: string
+          nullable: true
+          description: Nepal phone number (e.g. 98XXXXXXXX)
+          maxLength: 20
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth for age and clinical profile calculation
+    PaymentAttempt:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        gateway:
+          $ref: '#/components/schemas/GatewayEnum'
+        attempt_reference:
+          type: string
+          description: Gateway tracking reference (eSewa transaction_uuid or Khalti
+            pidx)
+          maxLength: 150
+        amount_paisa:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        status:
+          $ref: '#/components/schemas/PaymentAttemptStatusEnum'
+        gateway_transaction_id:
+          type: string
+          nullable: true
+          description: Upstream confirmation ID returned by the gateway (e.g. ref_id
+            from eSewa)
+          maxLength: 150
+        initiated_at:
+          type: string
+          format: date-time
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - amount_paisa
+      - attempt_reference
+      - gateway
+      - id
+    PaymentAttemptStatusEnum:
+      enum:
+      - initiated
+      - success
+      - failed
+      - expired
+      type: string
+      description: |-
+        * `initiated` - Initiated with Gateway
+        * `success` - Successfully Verified
+        * `failed` - Verification Failed
+        * `expired` - Session Expired
+    PaymentOrder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        order_type:
+          $ref: '#/components/schemas/OrderTypeEnum'
+        amount_paisa:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Order amount in Nepali paisa (1 NPR = 100 paisa).
+        amount_npr:
+          type: number
+          format: double
+          readOnly: true
+        currency:
+          type: string
+          maxLength: 10
+        status:
+          $ref: '#/components/schemas/PaymentOrderStatusEnum'
+        membership:
+          type: string
+          format: uuid
+          description: Unique identifier (UUIDv4)
+          nullable: true
+        idempotency_key:
+          type: string
+          description: Client-supplied or server-generated idempotency key to prevent
+            double charge.
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+      required:
+      - amount_npr
+      - amount_paisa
+      - created_at
+      - id
+      - idempotency_key
+    PaymentOrderStatusEnum:
+      enum:
+      - pending
+      - paid
+      - failed
+      - refunded
+      type: string
+      description: |-
+        * `pending` - Pending Payment
+        * `paid` - Paid & Verified
+        * `failed` - Failed
+        * `refunded` - Refunded
+    PaymentVerificationResponse:
+      type: object
+      properties:
+        is_verified:
+          type: boolean
+        order_status:
+          type: string
+        attempt:
+          $ref: '#/components/schemas/PaymentAttempt'
+      required:
+      - attempt
+      - is_verified
+      - order_status
+    PeriodEnum:
+      enum:
+      - morning
+      - evening
+      type: string
+      description: |-
+        * `morning` - Morning (AM)
+        * `evening` - Evening (PM)
+    Plan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          $ref: '#/components/schemas/CodeEnum'
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        price_paisa:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Price in Nepali Paisa (1 NPR = 100 Paisa). E.g. Rs 399 = 39900
+            paisa.
+        price_npr:
+          type: number
+          format: double
+          readOnly: true
+        currency:
+          type: string
+          maxLength: 10
+        duration_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Term length in days (4 weeks = 28 days for memberships).
+        consultations_included:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Consultation quota granted upon activation.
+        checkins_included:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Weekly photo check-in quota granted upon activation.
+        features:
+          description: Bullet points displayed on frontend subscription card
+        is_active:
+          type: boolean
+      required:
+      - code
+      - description
+      - id
+      - name
+      - price_npr
+      - price_paisa
+    PolicyAcceptItemRequest:
+      type: object
+      properties:
+        policy_type:
+          type: string
+          minLength: 1
+          maxLength: 50
+        version:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+      - policy_type
+      - version
+    PolicyTypeEnum:
+      enum:
+      - terms_of_service
+      - privacy_policy
+      - health_data_consent
+      - telemedicine_consent
+      type: string
+      description: |-
+        * `terms_of_service` - Terms of Service
+        * `privacy_policy` - Privacy Policy
+        * `health_data_consent` - Health Data Consent
+        * `telemedicine_consent` - Telemedicine Consent
+    Prescription:
+      type: object
+      description: Prescription representation matching Flutter Prescription model.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        doctorId:
+          type: string
+          format: uuid
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          readOnly: true
+        medications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Medication'
+        diagnosis:
+          type: string
+        prescribedDate:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: string
+        doctor:
+          allOf:
+          - $ref: '#/components/schemas/Doctor'
+          readOnly: true
+        notes:
+          type: string
+        followUpDate:
+          type: string
+          format: date
+          nullable: true
+        labTests:
+          type: array
+          items:
+            type: string
+        version:
+          type: integer
+          readOnly: true
+        isPublished:
+          type: boolean
+          readOnly: true
+      required:
+      - diagnosis
+      - doctor
+      - doctorId
+      - followUpDate
+      - id
+      - isPublished
+      - labTests
+      - medications
+      - notes
+      - prescribedDate
+      - status
+      - userId
+      - version
+    RegisterDeviceTokenRequestRequest:
+      type: object
+      properties:
+        fcm_token:
+          type: string
+          minLength: 1
+          maxLength: 255
+        device_type:
+          allOf:
+          - $ref: '#/components/schemas/DeviceTypeEnum'
+          default: android
+      required:
+      - fcm_token
+    RegisterRequestRequest:
+      type: object
+      properties:
+        email:
+          oneOf:
+          - type: string
+            format: email
+          - type: string
+            maxLength: 0
+        phone:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+          default: ''
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - password
+    ReminderPreference:
+      type: object
+      properties:
+        morning_routine_time:
+          type: string
+          format: time
+        evening_routine_time:
+          type: string
+          format: time
+        water_reminders_enabled:
+          type: boolean
+        water_interval_hours:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+    ReminderPreferenceRequest:
+      type: object
+      properties:
+        morning_routine_time:
+          type: string
+          format: time
+        evening_routine_time:
+          type: string
+          format: time
+        water_reminders_enabled:
+          type: boolean
+        water_interval_hours:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+    RescheduleAppointmentRequestRequest:
+      type: object
+      properties:
+        new_slot_id:
+          type: string
+          format: uuid
+      required:
+      - new_slot_id
+    ReviewCheckInRequestRequest:
+      type: object
+      properties:
+        feedback:
+          type: string
+          minLength: 1
+      required:
+      - feedback
+    RoleEnum:
+      enum:
+      - patient
+      - dermatologist
+      - admin
+      type: string
+      description: |-
+        * `patient` - Patient
+        * `dermatologist` - Dermatologist
+        * `admin` - Admin
+    RoutineLevelEnum:
+      enum:
+      - beginner
+      - intermediate
+      - advanced
+      type: string
+      description: |-
+        * `beginner` - Beginner (1-2 steps)
+        * `intermediate` - Intermediate (3-4 steps)
+        * `advanced` - Advanced (5+ steps)
+    RoutineTask:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        period:
+          $ref: '#/components/schemas/PeriodEnum'
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        step_name:
+          type: string
+          description: e.g. Cleanser, Toner, Moisturizer, Sunscreen
+          maxLength: 100
+        instructions:
+          type: string
+          description: Application guidance and technique
+        product_type:
+          type: string
+          maxLength: 100
+        is_completed:
+          type: boolean
+          readOnly: true
+          default: false
+      required:
+      - id
+      - instructions
+      - is_completed
+      - step_name
+    SelectPlanRequestRequest:
+      type: object
+      properties:
+        plan_code:
+          type: string
+          minLength: 1
+          description: 'Plan code: basic, premium, or pay_per_consultation'
+          maxLength: 50
+      required:
+      - plan_code
+    SignedUrlResponse:
+      type: object
+      properties:
+        photo_id:
+          type: string
+          format: uuid
+        signed_url:
+          type: string
+          format: uri
+        expires_in_seconds:
+          type: integer
+          default: 900
+      required:
+      - photo_id
+      - signed_url
+    SkinProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        skin_type:
+          allOf:
+          - $ref: '#/components/schemas/SkinTypeEnum'
+          description: |-
+            Primary skin classification
+
+            * `dry` - Dry
+            * `oily` - Oily
+            * `combination` - Combination
+            * `normal` - Normal
+            * `sensitive` - Sensitive
+        skin_tone:
+          allOf:
+          - $ref: '#/components/schemas/SkinToneEnum'
+          description: |-
+            Fitzpatrick skin tone estimate
+
+            * `fair` - Fair (Fitzpatrick I-II)
+            * `medium` - Medium (Fitzpatrick III-IV)
+            * `olive` - Olive (Fitzpatrick IV-V)
+            * `deep` - Deep (Fitzpatrick V-VI)
+        conditions:
+          description: Reported clinical conditions (e.g. eczema, psoriasis, rosacea,
+            acne)
+        concerns:
+          description: Primary concerns (e.g. acne, darkSpots, wrinkles, redness,
+            dryness, oiliness)
+        goals:
+          description: User goals (e.g. clearSkin, evenTone, hydration, oilControl)
+        routine_level:
+          allOf:
+          - $ref: '#/components/schemas/RoutineLevelEnum'
+          description: |-
+            Preferred complexity of daily routine
+
+            * `beginner` - Beginner (1-2 steps)
+            * `intermediate` - Intermediate (3-4 steps)
+            * `advanced` - Advanced (5+ steps)
+        sun_exposure:
+          allOf:
+          - $ref: '#/components/schemas/SunExposureEnum'
+          description: |-
+            Daily UV/sunlight exposure level
+
+            * `low` - Low (< 1 hour daily)
+            * `moderate` - Moderate (1-3 hours daily)
+            * `high` - High (3+ hours daily)
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was last updated (UTC)
+      required:
+      - created_at
+      - id
+      - updated_at
+    SkinProfileRequest:
+      type: object
+      properties:
+        skin_type:
+          allOf:
+          - $ref: '#/components/schemas/SkinTypeEnum'
+          description: |-
+            Primary skin classification
+
+            * `dry` - Dry
+            * `oily` - Oily
+            * `combination` - Combination
+            * `normal` - Normal
+            * `sensitive` - Sensitive
+        skin_tone:
+          allOf:
+          - $ref: '#/components/schemas/SkinToneEnum'
+          description: |-
+            Fitzpatrick skin tone estimate
+
+            * `fair` - Fair (Fitzpatrick I-II)
+            * `medium` - Medium (Fitzpatrick III-IV)
+            * `olive` - Olive (Fitzpatrick IV-V)
+            * `deep` - Deep (Fitzpatrick V-VI)
+        conditions:
+          description: Reported clinical conditions (e.g. eczema, psoriasis, rosacea,
+            acne)
+        concerns:
+          description: Primary concerns (e.g. acne, darkSpots, wrinkles, redness,
+            dryness, oiliness)
+        goals:
+          description: User goals (e.g. clearSkin, evenTone, hydration, oilControl)
+        routine_level:
+          allOf:
+          - $ref: '#/components/schemas/RoutineLevelEnum'
+          description: |-
+            Preferred complexity of daily routine
+
+            * `beginner` - Beginner (1-2 steps)
+            * `intermediate` - Intermediate (3-4 steps)
+            * `advanced` - Advanced (5+ steps)
+        sun_exposure:
+          allOf:
+          - $ref: '#/components/schemas/SunExposureEnum'
+          description: |-
+            Daily UV/sunlight exposure level
+
+            * `low` - Low (< 1 hour daily)
+            * `moderate` - Moderate (1-3 hours daily)
+            * `high` - High (3+ hours daily)
+    SkinToneEnum:
+      enum:
+      - fair
+      - medium
+      - olive
+      - deep
+      type: string
+      description: |-
+        * `fair` - Fair (Fitzpatrick I-II)
+        * `medium` - Medium (Fitzpatrick III-IV)
+        * `olive` - Olive (Fitzpatrick IV-V)
+        * `deep` - Deep (Fitzpatrick V-VI)
+    SkinTypeEnum:
+      enum:
+      - dry
+      - oily
+      - combination
+      - normal
+      - sensitive
+      type: string
+      description: |-
+        * `dry` - Dry
+        * `oily` - Oily
+        * `combination` - Combination
+        * `normal` - Normal
+        * `sensitive` - Sensitive
+    StressLevelEnum:
+      enum:
+      - low
+      - moderate
+      - high
+      type: string
+      description: |-
+        * `low` - Low
+        * `moderate` - Moderate
+        * `high` - High
+    SunExposureEnum:
+      enum:
+      - low
+      - moderate
+      - high
+      type: string
+      description: |-
+        * `low` - Low (< 1 hour daily)
+        * `moderate` - Moderate (1-3 hours daily)
+        * `high` - High (3+ hours daily)
+    TimeSlot:
+      type: object
+      description: Time slot representation matching Flutter TimeSlot model.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        isAvailable:
+          type: boolean
+          readOnly: true
+        timeRange:
+          type: string
+          readOnly: true
+      required:
+      - endTime
+      - id
+      - isAvailable
+      - startTime
+      - timeRange
+    TodayWaterResponse:
+      type: object
+      properties:
+        date:
+          type: string
+        glassesCompleted:
+          type: integer
+        dailyGoal:
+          type: integer
+        timestamps:
+          type: array
+          items: {}
+      required:
+      - dailyGoal
+      - date
+      - glassesCompleted
+      - timestamps
+    ToggleTaskResponse:
+      type: object
+      properties:
+        task_id:
+          type: string
+          format: uuid
+        is_completed:
+          type: boolean
+        date:
+          type: string
+          format: date
+      required:
+      - date
+      - is_completed
+      - task_id
+    TypeEnum:
+      enum:
+      - video
+      - in_person
+      type: string
+      description: |-
+        * `video` - Video Consultation
+        * `in_person` - In-Person Visit
+    UserDataExportResponse:
+      type: object
+      properties:
+        export_metadata:
+          type: object
+          additionalProperties: {}
+      required:
+      - export_metadata
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique user UUIDv4
+        email:
+          type: string
+          format: email
+          description: Primary email address used for login and notifications
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          description: Nepal phone number (e.g. 98XXXXXXXX)
+          maxLength: 20
+        name:
+          type: string
+          description: Full legal or preferred name
+          maxLength: 255
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+          description: |-
+            System actor role: patient, dermatologist, or admin
+
+            * `patient` - Patient
+            * `dermatologist` - Dermatologist
+            * `admin` - Admin
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth for age and clinical profile calculation
+        is_email_verified:
+          type: boolean
+          readOnly: true
+          description: Designates whether the user's email address has been verified
+        is_onboarded:
+          type: boolean
+          readOnly: true
+          description: Designates whether the user has completed medical onboarding
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date and time when the account was registered (UTC)
+      required:
+      - date_joined
+      - email
+      - id
+      - is_email_verified
+      - is_onboarded
+      - role
+    UserRoutine:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier (UUIDv4)
+        title:
+          type: string
+          maxLength: 255
+        disclaimer:
+          type: string
+        is_active:
+          type: boolean
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutineTask'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the record was created (UTC)
+      required:
+      - created_at
+      - id
+      - tasks
+    VerifyPaymentRequestRequest:
+      type: object
+      properties:
+        attempt_reference:
+          type: string
+          minLength: 1
+          description: eSewa transaction_uuid or Khalti pidx
+          maxLength: 150
+        callback_payload:
+          type: object
+          additionalProperties: {}
+      required:
+      - attempt_reference
+    VideoTokenResponse:
+      type: object
+      properties:
+        roomChannel:
+          type: string
+        token:
+          type: string
+        appId:
+          type: string
+        uid:
+          type: integer
+        expiresIn:
+          type: integer
+      required:
+      - appId
+      - expiresIn
+      - roomChannel
+      - token
+      - uid
+    WeeklyCheckIn:
+      type: object
+      description: Weekly skin progress photo check-in representation.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        weekNumber:
+          type: integer
+        status:
+          type: string
+        frontPhotoUrl:
+          type: string
+          nullable: true
+          readOnly: true
+        leftPhotoUrl:
+          type: string
+          nullable: true
+          readOnly: true
+        rightPhotoUrl:
+          type: string
+          nullable: true
+          readOnly: true
+        patientNote:
+          type: string
+        dermatologistFeedback:
+          type: string
+        reviewedAt:
+          type: string
+          format: date-time
+          nullable: true
+        submittedAt:
+          type: string
+          format: date-time
+      required:
+      - dermatologistFeedback
+      - frontPhotoUrl
+      - id
+      - leftPhotoUrl
+      - patientNote
+      - reviewedAt
+      - rightPhotoUrl
+      - status
+      - submittedAt
+      - weekNumber
+    WeeklyCheckInStatusOverview:
+      type: object
+      properties:
+        weekNumber:
+          type: integer
+        isUnlocked:
+          type: boolean
+        unlockDate:
+          type: string
+          format: date
+        isSubmitted:
+          type: boolean
+        checkIn:
+          allOf:
+          - $ref: '#/components/schemas/WeeklyCheckIn'
+          nullable: true
+      required:
+      - checkIn
+      - isSubmitted
+      - isUnlocked
+      - unlockDate
+      - weekNumber
+    WeeklyCheckInSubmissionRequest:
+      type: object
+      properties:
+        week_number:
+          type: integer
+          maximum: 4
+          minimum: 1
+        front_photo_id:
+          type: string
+          format: uuid
+          nullable: true
+        left_photo_id:
+          type: string
+          format: uuid
+          nullable: true
+        right_photo_id:
+          type: string
+          format: uuid
+          nullable: true
+        patient_note:
+          type: string
+          default: ''
+      required:
+      - week_number
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

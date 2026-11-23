@@ -91,8 +91,11 @@ class HydrationCardEnhanced extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // Action buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 4,
                 children: [
                   // Remove glass button (undo)
                   if (tracking.glassesCompleted > 0)
@@ -100,11 +103,9 @@ class HydrationCardEnhanced extends ConsumerWidget {
                       onPressed: () {
                         ref.read(waterTrackingProvider.notifier).removeGlass();
                       },
-                      icon: const Icon(Icons.undo),
+                      icon: const Icon(Icons.undo, size: 18),
                       label: const Text('Undo'),
                     ),
-
-                  const Spacer(),
 
                   // Enable/disable reminders
                   TextButton.icon(
@@ -134,6 +135,7 @@ class HydrationCardEnhanced extends ConsumerWidget {
                       ref.watch(waterTrackingProvider.notifier).remindersEnabled
                           ? Icons.notifications_active
                           : Icons.notifications_off,
+                      size: 18,
                     ),
                     label: Text(
                       ref.watch(waterTrackingProvider.notifier).remindersEnabled

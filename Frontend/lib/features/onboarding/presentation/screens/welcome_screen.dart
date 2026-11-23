@@ -16,41 +16,56 @@ class WelcomeScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            children: [
-              const Spacer(),
-              // Official Logo
-              Image.asset(
-                'assets/images/logo/logo.png',
-                height: 140,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: AppSpacing.xxl),
-              // Title
-              Text('Welcome to DermaCare',
-                  style: theme.textTheme.headlineLarge,
-                  textAlign: TextAlign.center),
-              const SizedBox(height: AppSpacing.md),
-              // Subtitle
-              Text(
-                'Your personalized skincare companion. Let\'s learn about your skin to create a routine that works for you.',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - (AppSpacing.xl * 2),
                 ),
-                textAlign: TextAlign.center,
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      // Official Logo
+                      Image.asset(
+                        'assets/images/logo/logo.png',
+                        height: 130,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      // Title
+                      Text(
+                        'Welcome to DermaCare',
+                        style: theme.textTheme.headlineLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      // Subtitle
+                      Text(
+                        'Your personalized skincare companion. Let\'s learn about your skin to create a routine that works for you.',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const Spacer(),
+                      const SizedBox(height: AppSpacing.lg),
+                      // Button
+                      PrimaryButton(
+                        label: 'Get Started',
+                        onPressed: () =>
+                            context.push('/onboarding/skin-profile'),
+                        isFullWidth: true,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                  ),
+                ),
               ),
-              const Spacer(),
-              // Button
-              PrimaryButton(
-                label: 'Get Started',
-                onPressed: () => context.push('/onboarding/skin-profile'),
-                isFullWidth: true,
-              ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

@@ -37,25 +37,40 @@ class _MedicalHistoryScreenState extends ConsumerState<MedicalHistoryScreen> {
   Future<void> _complete() async {
     setState(() => _isSubmitting = true);
 
-    final medicalHistory = MedicalHistory(
-      allergies: _allergies.toList(),
-      skinConditions: _conditions.toList(),
-      currentMedications: _medicationsController.text.trim().isEmpty
-          ? null
-          : _medicationsController.text.trim(),
-      isPregnant: _isPregnant,
-      isBreastfeeding: _isBreastfeeding,
-      additionalNotes: _notesController.text.trim().isEmpty
-          ? null
-          : _notesController.text.trim(),
-    );
+    try {
+      final medicalHistory = MedicalHistory(
+        allergies: _allergies.toList(),
+        skinConditions: _conditions.toList(),
+        currentMedications: _medicationsController.text.trim().isEmpty
+            ? null
+            : _medicationsController.text.trim(),
+        isPregnant: _isPregnant,
+        isBreastfeeding: _isBreastfeeding,
+        additionalNotes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      );
 
-    await ref.read(onboardingProvider.notifier).complete(medicalHistory);
+      await ref.read(onboardingProvider.notifier).complete(medicalHistory);
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    // Navigate to completion screen
-    context.go('/onboarding/complete');
+      // Navigate to completion screen
+      context.go('/onboarding/complete');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to complete onboarding: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 
   @override

@@ -1,6 +1,9 @@
 /// App-wide constants for DermaCare
 library;
 
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 /// Application information
 class AppInfo {
   AppInfo._();
@@ -84,8 +87,14 @@ class PaymentGateways {
 class ApiConstants {
   ApiConstants._();
 
-  // Base URL - will be configured per environment
-  static const String baseUrl = 'https://api.dermacare.app/v1';
+  // Base URL pointing dynamically to Django backend
+  static String get baseUrl {
+    if (kIsWeb) return 'http://127.0.0.1:8000/api/v1';
+    try {
+      if (Platform.isAndroid) return 'http://10.0.2.2:8000/api/v1';
+    } catch (_) {}
+    return 'http://127.0.0.1:8000/api/v1';
+  }
 
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);
@@ -235,7 +244,7 @@ class AssetPaths {
 class FeatureFlags {
   FeatureFlags._();
 
-  static const bool enableMockData = true; // Toggle fake repositories
+  static const bool enableMockData = false; // Set to false to use real Django API & database
   static const bool enableDebugLogging = true;
   static const bool enableAnalytics = false; // Not implemented yet
   static const bool enableCrashReporting = false; // Not implemented yet

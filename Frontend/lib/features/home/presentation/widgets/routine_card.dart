@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/cards/standard_card.dart';
@@ -43,13 +44,7 @@ class RoutineCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Full routine page coming soon'),
-                  ),
-                );
-              },
+              onPressed: () => context.push('/routine'),
               child: const Text('View Full Routine'),
             ),
           ),

@@ -34,11 +34,7 @@ class QuickActions extends StatelessWidget {
         icon: Icons.favorite_outline,
         label: 'Track Skin',
         color: colorScheme.tertiary,
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Skin tracking coming soon')),
-          );
-        },
+        onTap: () => context.push('/progress/logs'),
       ),
     ];
 
@@ -188,13 +184,17 @@ class _QuickActionButtonState extends State<_QuickActionButton>
                   )
                   .rotate(begin: 0, end: 0.05, duration: 150.ms),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                widget.label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: widget.color,
-                  fontWeight: FontWeight.w600,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.label,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: widget.color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
                 ),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

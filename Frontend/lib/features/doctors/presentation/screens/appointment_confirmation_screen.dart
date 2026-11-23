@@ -150,13 +150,7 @@ class AppointmentConfirmationScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               OutlinedButton(
                 onPressed: () {
-                  // TODO: Navigate to appointments list
-                  context.go('/home');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Appointments list coming soon'),
-                    ),
-                  );
+                  context.go('/appointments');
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),

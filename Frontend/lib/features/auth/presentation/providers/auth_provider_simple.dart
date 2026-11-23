@@ -4,6 +4,7 @@ import '../../../../core/storage/secure_storage_service.dart';
 import '../../../../core/utils/constants.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/fake_auth_repository.dart';
+import '../../data/repositories/real_auth_repository.dart';
 import '../../domain/models/auth_tokens_simple.dart';
 import '../../domain/models/login_request_simple.dart';
 import '../../domain/models/user_simple.dart';
@@ -16,7 +17,7 @@ AuthRepository authRepository(Ref ref) {
   if (FeatureFlags.enableMockData) {
     return FakeAuthRepository(failureRate: 0.1);
   }
-  throw UnimplementedError('Real auth repository not yet implemented');
+  return RealAuthRepository();
 }
 
 /// Auth state
